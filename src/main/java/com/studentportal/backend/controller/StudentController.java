@@ -5,6 +5,7 @@ import com.studentportal.backend.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+import com.studentportal.backend.dto.StudentDTO;
 
 import java.util.List;
 
@@ -25,6 +26,12 @@ public class StudentController {
     @GetMapping
     public List<Student> getAllStudents() {
         return studentService.getAllStudents();
+    }
+
+    @GetMapping("/dto")
+    public List<StudentDTO> getAllStudentDTOs() {
+
+        return studentService.getAllStudentDTOs();
     }
 
     // GET STUDENT BY ID
