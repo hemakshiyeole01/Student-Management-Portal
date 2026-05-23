@@ -4,6 +4,7 @@ import com.studentportal.backend.entity.Student;
 import com.studentportal.backend.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.studentportal.backend.exception.StudentNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,40 +27,38 @@ public class StudentService {
 
     // GET STUDENT BY ID
     public Student getStudentById(Long id) {
-        Optional<Student> student = studentRepository.findById(id);
 
-        if (student.isPresent()) {
-            return student.get();
-        } else {
-            return null;
-        }
+        return studentRepository.findById(id)
+                .orElseThrow(() ->
+                        new StudentNotFoundException("Student not found with ID: " + id));
     }
 
     // UPDATE STUDENT
     public Student updateStudent(Long id, Student updatedStudent) {
 
-        Student existingStudent = studentRepository.findById(id).orElse(null);
+        Student existingStudent = studentRepository.findById(id)
+                .orElseThrow(() ->
+                        new StudentNotFoundException("Student not found with ID: " + id));
 
-        if (existingStudent != null) {
+        existingStudent.setFullName(updatedStudent.getFullName());
+        existingStudent.setEmail(updatedStudent.getEmail());
+        existingStudent.setDepartment(updatedStudent.getDepartment());
+        existingStudent.setYear(updatedStudent.getYear());
+        existingStudent.setPhone(updatedStudent.getPhone());
+        existingStudent.setAddress(updatedStudent.getAddress());
+        existingStudent.setDob(updatedStudent.getDob());
 
-            existingStudent.setFullName(updatedStudent.getFullName());
-            existingStudent.setEmail(updatedStudent.getEmail());
-            existingStudent.setDepartment(updatedStudent.getDepartment());
-            existingStudent.setYear(updatedStudent.getYear());
-            existingStudent.setPhone(updatedStudent.getPhone());
-            existingStudent.setAddress(updatedStudent.getAddress());
-            existingStudent.setDob(updatedStudent.getDob());
-
-            return studentRepository.save(existingStudent);
-        }
-
-        return null;
+        return studentRepository.save(existingStudent);
     }
 
     // DELETE STUDENT
     public String deleteStudent(Long id) {
 
-        studentRepository.deleteById(id);
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() ->
+                        new StudentNotFoundException("Student not found with ID: " + id));
+
+        studentRepository.delete(student);
 
         return "Student deleted successfully";
     }

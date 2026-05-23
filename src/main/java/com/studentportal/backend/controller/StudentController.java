@@ -4,6 +4,7 @@ import com.studentportal.backend.entity.Student;
 import com.studentportal.backend.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class StudentController {
 
     // ADD STUDENT
     @PostMapping
-    public Student addStudent(@RequestBody Student student) {
+    public Student addStudent(@Valid @RequestBody Student student) {
         return studentService.addStudent(student);
     }
 
@@ -35,7 +36,7 @@ public class StudentController {
     // UPDATE STUDENT
     @PutMapping("/{id}")
     public Student updateStudent(@PathVariable Long id,
-                                 @RequestBody Student student) {
+                                 @Valid @RequestBody Student student) {
 
         return studentService.updateStudent(id, student);
     }
